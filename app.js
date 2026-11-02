@@ -89,12 +89,15 @@
     try { localStorage.setItem(LANG_KEY, lang); } catch (e) {}
   }
 
-  applyLang(getLang());
+  var currentLang = getLang();
+  applyLang(currentLang);
 
   var langBtn = document.getElementById('langToggle');
   if (langBtn) {
     langBtn.addEventListener('click', function () {
-      applyLang(getLang() === 'en' ? 'zh' : 'en');
+      // 用内存变量记录当前语言，切换时取反；不依赖 localStorage，避免 iframe/隐私模式下被禁用导致切不回中文
+      currentLang = currentLang === 'en' ? 'zh' : 'en';
+      applyLang(currentLang);
     });
   }
 
