@@ -116,13 +116,28 @@
   var year = document.getElementById('year');
   if (year) year.textContent = String(new Date().getFullYear());
 
-  /* ---------- 首屏渐入 ---------- */
-  if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    // 用 class 控制：JS 未生效时元素保持可见，不会出现空白页
-    var items = document.querySelectorAll('.section, .sidebar__inner');
-    Array.prototype.forEach.call(items, function (el, i) {
-      el.classList.add('reveal');
-      setTimeout(function () { el.classList.add('is-in'); }, 60 + i * 55);
+  /* ---------- 滚动渐入（进入视口才触发） ---------- */
+  var revealTargets = '.section, .card, .stats li, .sidebar__inner';
+  var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  if (!reduceMotion && 'IntersectionObserver' in window) {
+    var revEls = document.querySelectorAll(revealTargets);
+    Array.prototype.forEach.call(revEls, function (el) { el.classList.add('reveal'); });
+    var revObserver = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (!entry.isIntersecting) return;
+        var el = entry.target;
+        el.classList.add('is-in');
+        revObserver.unobserve(el);
+        // 动画结束后清理，恢复元素原生过渡（如卡片 hover）
+        setTimeout(function () { el.classList.remove('reveal', 'is-in'); }, 650);
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
+    Array.prototype.forEach.call(revEls, function (el) { revObserver.observe(el); });
+  } else {
+    // 降级：不支持或偏好减少动效时，直接保持可见
+    Array.prototype.forEach.call(document.querySelectorAll(revealTargets), function (el) {
+      el.classList.add('is-in');
     });
   }
 })();

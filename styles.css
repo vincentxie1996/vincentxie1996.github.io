@@ -37,7 +37,7 @@
   --text: #3b414a;
   --text-strong: #171b21;
   --text-muted: #7d848f;
-  --shadow: 0 14px 34px rgba(20, 24, 32, .045);
+  --shadow: 0 18px 46px rgba(20, 24, 32, .085);
   /* 浅色下金色加深，保证文字对比度 */
   --gold: #c9a02c;
   --gold-ink: #8a6510;
@@ -45,7 +45,7 @@
 }
 /* 卡片/数据块用极淡的填充替代实边框 */
 [data-theme="light"] {
-  --fill: rgba(255, 255, 255, .72);
+  --fill: #ffffff;
   --fill-tag: rgba(16, 20, 28, .04);
 }
 [data-theme="dark"] {
@@ -193,8 +193,8 @@ svg { width: 18px; height: 18px; display: block; }
 }
 
 .dot-live {
-  width: 7px; height: 7px; border-radius: 50%; background: #35d07f;
-  box-shadow: 0 0 0 4px rgba(53, 208, 127, .16);
+  width: 7px; height: 7px; border-radius: 50%; background: var(--gold);
+  box-shadow: 0 0 0 4px var(--gold-soft);
 }
 
 /* 头像 */
@@ -210,7 +210,7 @@ svg { width: 18px; height: 18px; display: block; }
 .avatar__dot {
   position: absolute; right: -3px; bottom: -3px;
   width: 16px; height: 16px; border-radius: 50%;
-  background: #35d07f; border: 3px solid var(--bg);
+  background: var(--gold); border: 3px solid var(--bg);
 }
 
 /* 导航 */
