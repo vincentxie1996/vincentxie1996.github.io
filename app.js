@@ -71,16 +71,21 @@
   }
 
   function applyLang(lang) {
-    var dict = I18N[lang] || {};
+    var isEn = lang === 'en';
+    var dict = I18N.en || {};
     Array.prototype.forEach.call(document.querySelectorAll('[data-i18n]'), function (el) {
       var key = el.getAttribute('data-i18n');
-      if (!(key in dict)) return;
+      // 首次运行时把页面原始（中文）内容存为备份，用于还原
       if (!el.dataset.orig) el.dataset.orig = el.innerHTML;
-      el.innerHTML = dict[key];
+      if (isEn && (key in dict)) {
+        el.innerHTML = dict[key];
+      } else {
+        el.innerHTML = el.dataset.orig; // 切回中文：从备份还原
+      }
     });
     var btn = document.getElementById('langToggle');
-    if (btn) btn.textContent = lang === 'en' ? '中' : 'EN';
-    root.setAttribute('lang', lang === 'en' ? 'en' : 'zh-CN');
+    if (btn) btn.textContent = isEn ? '中' : 'EN';
+    root.setAttribute('lang', isEn ? 'en' : 'zh-CN');
     try { localStorage.setItem(LANG_KEY, lang); } catch (e) {}
   }
 
